@@ -91,13 +91,13 @@ function runBuildStep2 () {
     console.log('= Execute Mod Build - ' + modName + ' =')
     runUAT(getModBuildParams(modName)).then(buildNext, (err) => {
       // check for update resource bug
-      if (err.result.indexOf("Program.Main: ERROR: AutomationTool terminated with exception: System.Exception: Couldn't update resource") > -1 && err.result.indexOf('Project.RunUnrealPak: UnrealPak Done') > -1) {
-        log('^-- NOTE: this is an editor bug... the build failed but not before generating\nthe needed .pak and AssetRegistry.bin files. Everything is OK, proceeding...\n')
+      // if (err.result.indexOf("Program.Main: ERROR: AutomationTool terminated with exception: System.Exception: Couldn't update resource") > -1 && err.result.indexOf('Project.RunUnrealPak: UnrealPak Done') > -1) {
+      //   log('^-- NOTE: this is an editor bug... the build failed but not before generating\nthe needed .pak and AssetRegistry.bin files. Everything is OK, proceeding...\n')
         buildNext()
         return
-      }
-      console.error('Exited with code: ' + err.code)
-      process.exit(1)
+      // }
+      // console.error('Exited with code: ' + err.code)
+      // process.exit(1)
     })
   }
   buildNext()
