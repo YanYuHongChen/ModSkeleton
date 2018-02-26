@@ -16,7 +16,7 @@ using UnrealBuildTool;
 
 public class ModSkeletonExamplePluginA : ModuleRules
 {
-	public ModSkeletonExamplePluginA(TargetInfo Target)
+	public ModSkeletonExamplePluginA(ReadOnlyTargetRules Target) : base(Target)
 	{
 		
 		PublicIncludePaths.AddRange(

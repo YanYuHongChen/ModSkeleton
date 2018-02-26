@@ -82,6 +82,7 @@ function runBuildStep2 () {
     }
   }
   let buildNext = () => {
+    console.log('evaluating whether to run build step 3')
     if (!modsToBuild.length) {
       runBuildStep3()
       return
@@ -323,7 +324,8 @@ function getModBuildParams (modName) {
     '-basedonreleaseversion=1.0',
     '-compressed',
     '-stage',
-    '-package'
+    '-package',
+    '-DLCIncludeEngineContent'
   ]
 }
 
