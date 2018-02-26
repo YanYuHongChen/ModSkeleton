@@ -36,13 +36,13 @@ public:
 	 * Get access to the Registry singleton
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "ModSkeleton")
-	static UModSkeletonRegistry* ModSkeletonRegistryGet();
+		static UModSkeletonRegistry* ModSkeletonRegistryGet();
 
 	/**
 	 * Helper compact BP node to dump the hook description struct
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "ModSkeletonHookDescription", meta = (CompactNodeTitle = "FullDescription"))
-	static FString GetFullDescription(const FModSkeletonHookDescription& HookDescription);
+		static FString GetFullDescription(const FModSkeletonHookDescription& HookDescription);
 
 private:
 	static UModSkeletonRegistry* GlobalModRegistryRef;

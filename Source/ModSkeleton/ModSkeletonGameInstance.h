@@ -26,12 +26,12 @@ UCLASS()
 class MODSKELETON_API UModSkeletonGameInstance : public UPlatformGameInstance
 {
 	GENERATED_BODY()
-	
+
 public:
 
 	virtual void Init() override;
 	virtual void Shutdown() override;
-	
-	UPROPERTY(BlueprintReadOnly, Category="ModSkeleton")
-	UModSkeletonRegistry* ModRegistry;
+
+	UPROPERTY(BlueprintReadOnly, Category = "ModSkeleton")
+		UModSkeletonRegistry* ModRegistry;
 };

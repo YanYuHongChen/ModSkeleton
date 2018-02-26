@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "ModSkeleton.h"
 #include "ModSkeletonRegistry.h"
+#include "ModSkeleton.h"
 
 #include "Modules/ModuleInterface.h"
 #include "Modules/ModuleManager.h"
@@ -56,7 +56,7 @@ void UModSkeletonRegistry::ScanForModPlugins()
 	//	}
 	//};
 	//StructDumpVisitor DumpVisitor;
-	
+
 	IPlatformFile& InnerPlatform = FPlatformFileManager::Get().GetPlatformFile();
 	FPakPlatformFile* PakPlatform = new FPakPlatformFile();
 	PakPlatform->Initialize(&InnerPlatform, TEXT(""));
@@ -145,7 +145,7 @@ void UModSkeletonRegistry::ScanForModPlugins()
 
 	// now that the content assets have been added, and the asset registry has been updated
 	// we need to search the in-memory AssetRegistry to find any MOD_SKELETON init interfaces
-	
+
 	TArray<FAssetData> AssetData;
 	AssetRegistry.GetAllAssets(AssetData);
 

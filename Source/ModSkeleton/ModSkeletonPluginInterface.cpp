@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "ModSkeleton.h"
 #include "ModSkeletonPluginInterface.h"
+#include "ModSkeleton.h"
 
 
 UModSkeletonPluginInterface::UModSkeletonPluginInterface(const class FObjectInitializer& ObjectInitializer)
-: Super(ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 }
 

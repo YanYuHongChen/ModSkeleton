@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "ModSkeleton.h"
 #include "BPVariant.h"
+#include "ModSkeleton.h"
 
 EBPVariantType UBPVariant::GetType() const
 {

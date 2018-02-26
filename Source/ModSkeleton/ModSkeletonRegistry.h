@@ -25,25 +25,25 @@ struct FModSkeletonHookDescription
 {
 	GENERATED_BODY()
 
-	/**
-	 * AlwaysInvoke Hooks to not participate in prioritization, and, when invoked,
-	 * are called on every registered ModPlugin.
-	 * "ModSkeletonInit" is an AlwaysInvoke Hook.
-	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ModSkeletonHookDescription")
-	bool AlwaysInvoke;
+		/**
+		 * AlwaysInvoke Hooks to not participate in prioritization, and, when invoked,
+		 * are called on every registered ModPlugin.
+		 * "ModSkeletonInit" is an AlwaysInvoke Hook.
+		 */
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ModSkeletonHookDescription")
+		bool AlwaysInvoke;
 
 	/**
 	 * Globally unique name of the hook
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ModSkeletonHookDescription")
-	FString HookName;
+		FString HookName;
 
 	/**
 	 * Description of what the hook intends to accomplish
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ModSkeletonHookDescription")
-	FString HookDescription;
+		FString HookDescription;
 
 	/**
 	 * Descriptions for each parameter/result in the HookIO array
@@ -54,7 +54,7 @@ struct FModSkeletonHookDescription
 	 *   ]
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ModSkeletonHookDescription")
-	TArray<FString> HookIODescription;
+		TArray<FString> HookIODescription;
 };
 
 /**
@@ -65,24 +65,24 @@ struct FModSkeletonConnectHook
 {
 	GENERATED_BODY()
 
-	/**
-	 * Connected HookName
-	 */
-	UPROPERTY()
-	FString HookName;
+		/**
+		 * Connected HookName
+		 */
+		UPROPERTY()
+		FString HookName;
 
 	/**
 	 * Priority - higher numbers are invoked first
 	 */
 	UPROPERTY()
-	int32 Priority;
+		int32 Priority;
 
 	/**
 	 * Link to the UObject on which to invoke this hook.
 	 * Must implement ModSkeletonPluginInterface
 	 */
 	UPROPERTY()
-	UObject *ModSkeletonPluginInterface;
+		UObject *ModSkeletonPluginInterface;
 };
 
 /**
@@ -105,7 +105,7 @@ UCLASS(BlueprintType)
 class MODSKELETON_API UModSkeletonRegistry : public UObject
 {
 	GENERATED_BODY()
-	
+
 public:
 	UModSkeletonRegistry();
 
@@ -115,67 +115,67 @@ public:
 	 * will not re-load any mods that have changed or un-load any deleted ones
 	 */
 	UFUNCTION(BlueprintCallable, Category = "ModSkeleton")
-	virtual void ScanForModPlugins();
+		virtual void ScanForModPlugins();
 
 	/**
 	 * Get a list of all loaded plugin init interfaces
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "ModSkeleton")
-	virtual void ListModPlugins(TArray< UObject* >& OutPluginList);
+		virtual void ListModPlugins(TArray< UObject* >& OutPluginList);
 
 	/**
 	 * Install a new hook to the mod system
 	 */
 	UFUNCTION(BlueprintCallable, Category = "ModSkeleton")
-	virtual bool InstallHook(FModSkeletonHookDescription HookDescription);
+		virtual bool InstallHook(FModSkeletonHookDescription HookDescription);
 
 	/**
 	 * List all hooks that have been installed
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "ModSkeleton")
-	virtual TArray< FModSkeletonHookDescription > ListHooks();
+		virtual TArray< FModSkeletonHookDescription > ListHooks();
 
 	/**
 	 * Get a HookDescription for a single hook
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "ModSkeleton")
-	virtual FModSkeletonHookDescription GetHookDescription(FString HookName);
+		virtual FModSkeletonHookDescription GetHookDescription(FString HookName);
 
 	/**
 	 * Connect a plugin interface to a HookName at a given priority
 	 */
 	UFUNCTION(BlueprintCallable, Category = "ModSkeleton")
-	virtual void ConnectHook(FString HookName, int32 Priority, UObject *ModSkeletonPluginInterface);
+		virtual void ConnectHook(FString HookName, int32 Priority, UObject *ModSkeletonPluginInterface);
 
 	/**
 	 * Invoke an installed hook
 	 */
 	UFUNCTION(BlueprintCallable, Category = "ModSkeleton")
-	virtual TArray< UBPVariant* > InvokeHook(FString HookName, const TArray< UBPVariant* >& HookIO);
+		virtual TArray< UBPVariant* > InvokeHook(FString HookName, const TArray< UBPVariant* >& HookIO);
 
 private:
 	/**
 	 * Keep track of loaded pak names so we don't re-load one we've loaded before
 	 */
 	UPROPERTY()
-	TMap<FString, bool> LoadedPaks;
+		TMap<FString, bool> LoadedPaks;
 
 	/**
 	 * Keep track of all initialized MOD_SKELETON init interfaces, so we don't re-init any
 	 */
 	UPROPERTY()
-	TMap<FName, UObject *> LoadedPlugins;
+		TMap<FName, UObject *> LoadedPlugins;
 
 	/**
 	 * Keep track of all installed hook descriptions
 	 */
 	UPROPERTY()
-	TMap<FString, FModSkeletonHookDescription> RegisteredHooks;
+		TMap<FString, FModSkeletonHookDescription> RegisteredHooks;
 
 	/**
 	 * USE AS A HEAP - always access with heap functions using FModSkeletonConnectHookPredicate
 	 * The priority heap of connected hooks
 	 */
 	UPROPERTY()
-	TArray<FModSkeletonConnectHook> ConnectedHooks;
+		TArray<FModSkeletonConnectHook> ConnectedHooks;
 };

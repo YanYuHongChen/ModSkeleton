@@ -16,8 +16,10 @@ using UnrealBuildTool;
 
 public class ModSkeleton : ModuleRules
 {
-	public ModSkeleton(TargetInfo Target)
+	public ModSkeleton(ReadOnlyTargetRules Target) : base(Target)
 	{
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UMG", "PakFile"});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
