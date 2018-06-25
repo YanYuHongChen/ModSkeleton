@@ -40,32 +40,33 @@ void UModSkeletonRegistry::ScanForModPlugins()
 	IAssetRegistry& AssetRegistry = AssetRegistryModule.Get();
 
 	// Uncomment this and the "PakPlatform->IterateDirectoryRecursively" below to dump out pak contents on load
-	//struct StructDumpVisitor : public IPlatformFile::FDirectoryVisitor
-	//{
-	//	virtual bool Visit(const TCHAR* FilenameOrDirectory, bool bIsDirectory)
-	//	{
-	//		if (bIsDirectory)
-	//		{
-	//			UE_LOG(ModSkeletonLog, Log, TEXT(" - DumpVisitor Directory: %s"), FilenameOrDirectory);
-	//		}
-	//		else
-	//		{
-	//			UE_LOG(ModSkeletonLog, Log, TEXT(" - DumpVisitor File: %s"), FilenameOrDirectory);
-	//		}
-	//		return true;
-	//	}
-	//};
-	//StructDumpVisitor DumpVisitor;
+	struct StructDumpVisitor : public IPlatformFile::FDirectoryVisitor
+	{
+		virtual bool Visit(const TCHAR* FilenameOrDirectory, bool bIsDirectory)
+		{
+			if (bIsDirectory)
+			{
+				UE_LOG(ModSkeletonLog, Log, TEXT(" - DumpVisitor Directory: %s"), FilenameOrDirectory);
+			}
+			else
+			{
+				UE_LOG(ModSkeletonLog, Log, TEXT(" - DumpVisitor File: %s"), FilenameOrDirectory);
+			}
+			return true;
+		}
+	};
+	StructDumpVisitor DumpVisitor;
 
 	IPlatformFile& InnerPlatform = FPlatformFileManager::Get().GetPlatformFile();
 	FPakPlatformFile* PakPlatform = new FPakPlatformFile();
 	PakPlatform->Initialize(&InnerPlatform, TEXT(""));
 	FPlatformFileManager::Get().SetPlatformFile(*PakPlatform);
+	//FPlatformFileManager::Get().InitializeNewAsyncIO();
 
 	IFileManager& FileManager = IFileManager::Get();
-	FString PakPath = FPaths::GameContentDir() + TEXT("Paks");
-	FPaths::NormalizeDirectoryName(PakPath);
-	FString BinSearch = PakPath + "/*.bin";
+	FString ModPath = FPaths::ProjectDir() + TEXT("Mods");
+	FPaths::NormalizeDirectoryName(ModPath);
+	FString BinSearch = ModPath + "/*.bin";
 
 	// First, search for all AssetRegistry *.bin files in the Paks directory
 	TArray<FString> Files;
@@ -74,7 +75,7 @@ void UModSkeletonRegistry::ScanForModPlugins()
 
 	for (int32 i = 0; i < Files.Num(); ++i)
 	{
-		FString BinFilename = PakPath + TEXT("/") + Files[i];
+		FString BinFilename = ModPath + TEXT("/") + Files[i];
 		FPaths::MakeStandardFilename(BinFilename);
 		UE_LOG(ModSkeletonLog, Log, TEXT(" - AssetRegistry: %s"), *BinFilename);
 
@@ -97,15 +98,13 @@ void UModSkeletonRegistry::ScanForModPlugins()
 
 			// Mount the .pak content file
 
-			// TODO - Would prefer to use this, but I cannot seem to make the mount paths correct for it
+			// For now, don't use this code because I need to run PakFile.GetMountPoint() to call RegisterMountPoint() with right arguments
 			//if (!FCoreDelegates::OnMountPak.Execute(PakFilename, 0, &DumpVisitor))
 			//{
 			//	UE_LOG(ModSkeletonLog, Error, TEXT("Failed to mount pak file: %s"), *PakFilename);
 			//	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("Failed to mount pak file: %s"), *PakFilename));
 			//	continue;
 			//}
-
-			FString MountPoint(FPaths::GetPath(PakFilename));
 
 			FPakFile PakFile(&InnerPlatform, *PakFilename, false);
 			if (!PakFile.IsValid())
@@ -114,6 +113,11 @@ void UModSkeletonRegistry::ScanForModPlugins()
 				GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("Invalid pak file: %s"), *PakFilename));
 				continue;
 			}
+
+			FString MountPoint = PakFile.GetMountPoint();
+			FPaths::MakeStandardFilename(MountPoint);
+			UE_LOG(ModSkeletonLog, Log, TEXT(" - Plugin contents mountpoint is: %s"), *MountPoint);
+			UE_LOG(ModSkeletonLog, Log, TEXT("If the mountpoint doesn't include the plugin name, the MOD Pak contains Engine contents. Remove the reference to Engine contents and rebuild Pak."));
 
 			PakFile.SetMountPoint(*MountPoint);
 			if (!PakPlatform->Mount(*PakFilename, 0, *MountPoint))
@@ -125,12 +129,13 @@ void UModSkeletonRegistry::ScanForModPlugins()
 
 			LoadedPaks.Add(PakFilename, true);
 
-			FString MountTarget = FPaths::Combine(*MountPoint, TEXT("Plugins"), *FilenamePart, TEXT("Content/"));
-			UE_LOG(ModSkeletonLog, Log, TEXT(" - Mounting At: %s"), *MountTarget);
-			FPackageName::RegisterMountPoint(TEXT("/") + FilenamePart + TEXT("/"), MountTarget);
+			// Mount Plugin contents
+			FString PluginContentsDirectory = FPaths::Combine(MountPoint, TEXT("Content/"));
+			FPaths::MakeStandardFilename(PluginContentsDirectory);
+			UE_LOG(ModSkeletonLog, Log, TEXT(" - Plugin contents mounting at: %s"), *PluginContentsDirectory);
+			FPackageName::RegisterMountPoint(TEXT("/") + FilenamePart + TEXT("/"), PluginContentsDirectory);
 
 			// Load the asset registry .bin file into the in-memory AssetRegistry
-
 			FArrayReader SerializedAssetData;
 			if (FFileHelper::LoadFileToArray(SerializedAssetData, *BinFilename))
 			{
@@ -139,7 +144,8 @@ void UModSkeletonRegistry::ScanForModPlugins()
 				//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Emerald, FString::Printf(TEXT(" - AssetRegistry Loaded (%d bytes): %s"), SerializedAssetData.Num(), *BinFilename));
 			}
 
-			//PakPlatform->IterateDirectoryRecursively(*MountTarget, DumpVisitor);
+			UE_LOG(ModSkeletonLog, Log, TEXT("Dump %s"), *PluginContentsDirectory);
+			PakPlatform->IterateDirectoryRecursively(*PluginContentsDirectory, DumpVisitor);
 		}
 	}
 
