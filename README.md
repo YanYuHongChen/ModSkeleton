@@ -1,6 +1,6 @@
 # ModSkeleton
 
-- Targets UE 4.19 Preview 4
+- Targets UE 4.20 Preview 3
 
 ```
 Copyright 2017 Smogworks
@@ -23,16 +23,6 @@ limitations under the License.
 - To be a go-to example for Unreal Engine 4 modding support.
 - To not require core engine changes - work with prebuilt UE4 Editor from Epig Games Launcher.
 
-## Get it Running (Scripted)
-
-1. Download NodeJS - https://nodejs.org
-1. Clone the Repo
-1. Run the build script once to generate a config: `node ue4build.js`
-1. Inspect the config (`.ue4build.json`), if you built ue4 from source, you may need to change the `uatCommand` path.
-1. Run the build script again to build: `node ue4build.js`
-1. If there are errors, AutomationTool.exe output can be found in the log file specified in `.ue4build.json`
-1. If it succeeds, a runable project complete with mod paks should be found in the `outputPath` directory specified in `.ue4build.json`
-
 ## Get it Running (Manually)
 
 1. Clone the Repo
@@ -43,8 +33,7 @@ limitations under the License.
 1. Execute the Full Game launch profile for your platform
 1. Enable the ModSkeletonExamplePluginA plugin
 1. Execute the Mod launch profile for you platform - note this may fail, but not before generating the needed .pak and AssetRegistry files
-1. Move/Rename "Plugins/ModSkeletonExamplePluginA/Saved/Cooked/[platform]/ModSkeleton/AssetRegistry.bin" to "Saved/StagedBuilds/[platform]/ModSkeleton/Content/Paks/ModSkeletonExamplePluginA.bin"
-1. Move/Rename "Plugins/ModSkeletonExamplePluginA/Saved/StagedBuilds/[platform]/ModSkeleton/Content/Paks/ModSkeleton-[platform].pak" to "Saved/StagedBuilds/[platform]/ModSkeleton/Content/Paks/ModSkeletonExamplePluginA.pak"
+1. If you are building for Win64/WindowsNoEditor, execute CopyExeAndPak.bat to copy the executable and the Pak file to proper directory. If not, manually copy them based on the .bat behavior.
 1. Execute "Saved/StagedBuilds/[platform]/[ModSkeleton executable]
 
 ## Architecture
@@ -52,7 +41,7 @@ limitations under the License.
 ### Startup
 
 - ModSkeletonGameInstance initializes and keeps a reference to a single ModSkeletonRegistry instance
-- ModSkeletonRegistry scans the Content/Paks directory for matching AssetRegistry (".bin") files and Content (".pak") files loading all.
+- ModSkeletonRegistry scans the Mods directory for matching Pak (".pak") files and load them all.
 - ModSkeletonRegistry searches the in-memory AssetRegistry for all classes whos name begins with "MOD_SKELETON" and who implement ModSkeletonPluginInterface
 - The plugin interface is invoked once as "ModSkeletonInit" allowing these mods to register, connect, and/or invoke mod Hooks.
 
@@ -88,7 +77,6 @@ end class
 
 ## TODO
 
-- switch to using `FCoreDelegates::OnMountPak` (I haven't figured out the mountpoint paths with this method)
 - Example CPP plugin
 
 ## Questions
