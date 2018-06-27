@@ -34,7 +34,11 @@ limitations under the License.
 1. Enable the ModSkeletonExamplePluginA plugin
 1. Execute the Mod launch profile for you platform - note this may fail, but not before generating the needed Pak file
 1. Copy Plugins/ModSkeletonExamplePluginA/Saved/StagedBuilds/[platform]/ModSkeleton/Plugins/ModSkeletonExamplePluginA/Content/Paks/[platform]/ModSkeletonExamplePluginA.pak to Saved/StagedBuilds/[platform]/ModSkeleton/Mods/ (If you are building for Win64+WindowsNoEditor, you may run CopyExeAndPak.bat)
-1. Execute "Saved/StagedBuilds/[platform]/[ModSkeleton executable]
+1. Execute "Saved/StagedBuilds/[platform]/[ModSkeleton executable]. It automatically loads Pak file.
+1. Type "open exampleplugina" from game console and confirm a new map is loaded
+
+If the Pak file is properly loaded, the screen should look like this. 
+![MOD loaded](MODLoaded.jpg)
 
 ## Develop plugin
 
