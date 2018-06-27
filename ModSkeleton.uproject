@@ -13,11 +13,5 @@
 				"Engine"
 			]
 		}
-	],
-	"Plugins": [
-		{
-			"Name": "ModSkeletonExamplePluginA",
-			"Enabled": false
-		}
 	]
 }
