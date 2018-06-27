@@ -32,18 +32,37 @@ limitations under the License.
 1. Disable the ModSkeletonExamplePluginA plugin (Edit -> Plugins -> "ModSkeleton" section)
 1. Execute the Full Game launch profile for your platform
 1. Enable the ModSkeletonExamplePluginA plugin
-1. Execute the Mod launch profile for you platform - note this may fail, but not before generating the needed .pak and AssetRegistry files
-1. If you are building for Win64/WindowsNoEditor, execute CopyExeAndPak.bat to copy the executable and the Pak file to proper directory. If not, manually copy them based on the .bat behavior.
+1. Execute the Mod launch profile for you platform - note this may fail, but not before generating the needed Pak file
+1. Copy Plugins/ModSkeletonExamplePluginA/Saved/StagedBuilds/[platform]/ModSkeleton/Plugins/ModSkeletonExamplePluginA/Content/Paks/[platform]/ModSkeletonExamplePluginA.pak to Saved/StagedBuilds/[platform]/ModSkeleton/Mods/ (If you are building for Win64+WindowsNoEditor, you may run CopyExeAndPak.bat)
 1. Execute "Saved/StagedBuilds/[platform]/[ModSkeleton executable]
+
+## Develop plugin
+
+### Develop just contents
+
+1. Enable the ModSkeletonExamplePluginA plugin
+1. Develop as normal UE4 project.
+
+Note: This is the easiest way to develop the plugin. But you can't confirm the behavior of MOD load hook function
+
+### Loading Pak files an debug the program
+
+1. Develop and place MOD pak file in the proper location
+1. Build Debug or DebugGame build from Visual Studio.
+1. Copy Binaries/[architecture]/* to Saved/StagedBuilds/[platform]/ModSkeleton/Binaries/[architecture]/
+1. Run executable in Saved/StagedBuilds/[platform]/ModSkeleton/Binaries/[architecture]/
+1. Attach Visual Studio debugger to running process
+
+Note: So far, I haven't succeeded to load assets from Pak file from debug build directly launched from Visual Studio
 
 ## Architecture
 
 ### Startup
 
 - ModSkeletonGameInstance initializes and keeps a reference to a single ModSkeletonRegistry instance
-- ModSkeletonRegistry scans the Mods directory for matching Pak (".pak") files and load them all.
+- ModSkeletonRegistry scans the Mods directory for matching Pak (".pak") files and load them all. Also loads AssetRegistry.bin in the Pak file
 - ModSkeletonRegistry searches the in-memory AssetRegistry for all classes whos name begins with "MOD_SKELETON" and who implement ModSkeletonPluginInterface
-- The plugin interface is invoked once as "ModSkeletonInit" allowing these mods to register, connect, and/or invoke mod Hooks.
+- The plugin interface is invoked once as "ModSkeletonInit" allowing these mods to register, connect, and/or invoke mod Hooks
 
 ### ModSkeleton Hooks
 
@@ -78,6 +97,7 @@ end class
 ## TODO
 
 - Example CPP plugin
+- Find a way to load Pak file from Debug or DebugGame build launched from Visual Studio
 
 ## Questions
 
