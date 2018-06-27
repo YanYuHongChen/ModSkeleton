@@ -1,6 +1,6 @@
 # ModSkeleton
 
-- Targets UE 4.20 Preview 3
+- Targets UE 4.20 Preview 4
 
 ```
 Copyright 2017 Smogworks
