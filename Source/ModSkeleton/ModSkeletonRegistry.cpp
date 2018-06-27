@@ -120,9 +120,10 @@ void UModSkeletonRegistry::ScanForModPlugins()
 
 		// Mount Plugin contents
 		FString PluginContentsDirectory = FPaths::Combine(MountPoint, TEXT("Content/"));
+		FString PluginMountPoint = TEXT("/") + FilenamePart + TEXT("/");
 		FPaths::MakeStandardFilename(PluginContentsDirectory);
 		UE_LOG(ModSkeletonLog, Log, TEXT(" - Plugin contents mounting at: %s"), *PluginContentsDirectory);
-		FPackageName::RegisterMountPoint(TEXT("/") + FilenamePart + TEXT("/"), PluginContentsDirectory);
+		FPackageName::RegisterMountPoint(PluginMountPoint, PluginContentsDirectory);
 
 		// Load the asset registry .bin file into the in-memory AssetRegistry
 		FString BinFilename = MountPoint + TEXT("AssetRegistry.bin");
@@ -134,8 +135,8 @@ void UModSkeletonRegistry::ScanForModPlugins()
 			//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Emerald, FString::Printf(TEXT(" - AssetRegistry Loaded (%d bytes): %s"), SerializedAssetData.Num(), *BinFilename));
 		}
 
-		UE_LOG(ModSkeletonLog, Log, TEXT("Dump %s"), *PluginContentsDirectory);
-		PakPlatform->IterateDirectoryRecursively(*PluginContentsDirectory, DumpVisitor);
+		//UE_LOG(ModSkeletonLog, Log, TEXT("Dump %s"), *PluginContentsDirectory);
+		//PakPlatform->IterateDirectoryRecursively(*PluginContentsDirectory, DumpVisitor);
 	}
 
 	// now that the content assets have been added, and the asset registry has been updated
