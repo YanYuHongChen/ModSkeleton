@@ -20,6 +20,8 @@ public class ModSkeletonEditorTarget : TargetRules
 	public ModSkeletonEditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
+		DefaultBuildSettings = BuildSettingsVersion.V2;
+		ShadowVariableWarningLevel = WarningLevel.Warning;
 
 		ExtraModuleNames.AddRange( new string[] { "ModSkeleton" } );
 	}

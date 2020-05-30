@@ -1,6 +1,6 @@
 # ModSkeleton
 
-- UE 4.20 Preview 4対応
+- Targets UE 4.24
 
 ```
 Copyright 2017 Smogworks
@@ -18,65 +18,64 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ```
 
-## 目標
+## Goals
 
-- Unreal Engine 4のMODサポートのためのわかりやすいサンプルとなること
-- エンジンの改変を必要としないこと - Epic Gamesランチャーからインストールされるコンパイル済みのUE4エディタで動作すること
+- To be a go-to example for Unreal Engine 4 modding support.
+- To not require core engine changes - work with prebuilt UE4 Editor from Epig Games Launcher.
 
-## 使い方 (マニュアル操作の場合)
+## Get it Running (Manually)
 
-1. リポジトリをクローンする
-1. ModSkeleton.uprojectを開く
-1. コンテンツブラウザの"表示オプション" -> "プラグインコンテンツを表示"を選択し、サンプルプラグインのコンテンツが見えるようにする
-1. こちらの手順に従い、カスタムプロファイルの設定を行う [Instruction to Build Custom Launcher Profiles](doc/build_profiles/build_profiles.md)
-1. ModSkeletonExamplePluginAプラグインを無効にする。無効にしないとプラグインコンテンツが実行ファイルに含まれてしまうので注意 (編集 -> Plugins -> "ModSkeleton" セクション)
-1. Full Game launchプロファイルを所望のプラットフォーム向けに実行する
-1. ModSkeletonExamplePluginAプラグインを有効にする
-1. Mod launchプロファイルを所望のプラットフォーム向けに実行する。この処理は途中で失敗するが、必要なPakファイルは生成されているため問題ない
-1. Plugins/ModSkeletonExamplePluginA/Saved/StagedBuilds/[プラットフォーム名]/ModSkeleton/Plugins/ModSkeletonExamplePluginA/Content/Paks/[プラットフォーム名]/ModSkeletonExamplePluginA.pakをSaved/StagedBuilds/[プラットフォーム名]/ModSkeleton/Mods/ にコピーする (もしWin64とWindowsNoEditor向けにビルドしているのであれば、CopyExeAndPak.batを実行するだけでもよい)
-1. Saved/StagedBuilds/[プラットフォーム名]/[ModSkeleton実行ファイル]を実行する。このアプリケーションは自動的にPakファイル(MOD)の読み込みを行う
-1. ゲーム内コンソールから"open ExamplePluginA"を実行し、新しいマップが読み込まれることを確認する
+1. Clone the Repo
+1. Open ModSkeleton.uproject
+1. Be sure to select "View Options" -> "Show Plugin Content" in the Content browser to see Example Plugin Content
+1. Follow [Instruction to Build Custom Launcher Profiles](doc/build_profiles/build_profiles.md)
+1. Disable the ModSkeletonExamplePluginA plugin (Edit -> Plugins -> "ModSkeleton" section)
+1. Execute the Full Game launch profile for your platform
+1. Enable the ModSkeletonExamplePluginA plugin
+1. Execute the Mod launch profile for you platform - note this may fail, but not before generating the needed Pak file
+1. Copy Plugins/ModSkeletonExamplePluginA/Saved/StagedBuilds/[platform]/ModSkeleton/Plugins/ModSkeletonExamplePluginA/Content/Paks/[platform]/ModSkeletonExamplePluginA.pak to Saved/StagedBuilds/[platform]/ModSkeleton/Mods/ (If you are building for Win64+WindowsNoEditor, you may run CopyExeAndPak.bat)
+1. Execute "Saved/StagedBuilds/[platform]/[ModSkeleton executable]. It automatically loads Pak file.
+1. Type "open exampleplugina" from game console and confirm a new map is loaded
 
-もしMODが正しくロードされていれば、ゲーム画面は以下のようなものになる
+If the Pak file is properly loaded, the screen should look like this. 
 ![MOD loaded](MODLoaded.jpg)
 
-## MODプラグインの開発
+## Develop plugin
 
-### コンテンツのみを開発する
+### Develop just contents
 
-1. UE4エディタでModSkeletonExamplePluginAプラグインを有効にする
-1. 通常のUE4プロジェクトと同様に開発を行う
-1. 開発が終わったらMod launchプロファイルを実行してPakファイル(MOD)を生成する
+1. Enable the ModSkeletonExamplePluginA plugin
+1. Develop as normal UE4 project.
 
-Note: これはMODのコンテンツを開発する最も簡単な方法ですが、MODロード時の挙動を確認することはできません (例えば、PakファイルがロードされたときのMOD管理メニューの動作確認など)
+Note: This is the easiest way to develop the plugin. But you can't confirm the behavior of MOD load hook function
 
-### デバッグ中にPakファイルをロードする
+### Loading Pak files an debug the program
 
-1. 所定の位置にMOD Pakファイルを設置する
-1. DebugあるいはDebugGameビルドをVisual Studioから行う
-1. Binaries/[アーキテクチャ名]/以下の全ファイルをSaved/StagedBuilds/[プラットフォーム名]/ModSkeleton/Binaries/[アーキテクチャ名]/にコピーする
-1. Saved/StagedBuilds/[プラットフォーム名]/ModSkeleton/Binaries/[アーキテクチャ名]/のDebugあるいはDebugGameビルドの実行ファイルを実行する
-1. Visual Studioデバッガを実行中のプロセスにアタッチする
+1. Develop and place MOD pak file in the proper location
+1. Build Debug or DebugGame build from Visual Studio.
+1. Copy Binaries/[architecture]/* to Saved/StagedBuilds/[platform]/ModSkeleton/Binaries/[architecture]/
+1. Run executable in Saved/StagedBuilds/[platform]/ModSkeleton/Binaries/[architecture]/
+1. Attach Visual Studio debugger to running process
 
-注: ここまでのところ、Visual Studioから直接起動したDebugビルドからPakファイルを読み込み、アセットを使えることが確認できていません
+Note: So far, I haven't succeeded to load assets from Pak file from debug build directly launched from Visual Studio
 
-## このサンプルの仕組み
+## Architecture
 
-### 起動時の挙動
+### Startup
 
-- ModSkeletonGameInstanceが初期化され、ModSkeletonRegistryの唯一のインスタンスを初期化し、その参照を保持します
-- ModSkeletonRegistryはModsディレクトリをスキャンし、適切なPak (".pak") ファイルを探し、すべてをロードします。また、Pakファイル内にあるAssetRegistry.binを読み込み、Pakファイル内のアセットをアセットレジストリに追加します。
-- ModSkeletonRegistryはメモリ上にロードされたアセットレジストリ内を全検索し、"MOD_SKELETON"でクラス名が始まり、かつModSkeletonPluginInterfaceクラスを実装したクラスを見つけます
-- そのクラスのプラグインインタフェースは、"ModSkeletonInit"がMODを登録する際、MODに接続する際、あるいはMODフックを実行する際に呼び出されます。
+- ModSkeletonGameInstance initializes and keeps a reference to a single ModSkeletonRegistry instance
+- ModSkeletonRegistry scans the Mods directory for matching Pak (".pak") files and load them all. Also loads AssetRegistry.bin in the Pak file
+- ModSkeletonRegistry searches the in-memory AssetRegistry for all classes whos name begins with "MOD_SKELETON" and who implement ModSkeletonPluginInterface
+- The plugin interface is invoked once as "ModSkeletonInit" allowing these mods to register, connect, and/or invoke mod Hooks
 
-### ModSkeletonフック
+### ModSkeleton Hooks
 
-- BPVariantはuobjectを親としたブループリントで使用可能なvariantクラスで、フックの呼び出しを介したデータの交換を簡単にします
-- ”常に呼び出す"とマークされたフック(例えば"ModSkeletonInit"フックのようなものです)は、MOD_SKELETON初期化インタフェースがロードされる際に一度呼び出されます
-- "常に呼び出す"とマークされていないフックは、それらが接続されたときだけ呼び出されます。また、その呼出は優先度順になります。
-- フックはBPVariantsの配列への参照を引数として渡され、この"HookIO"は入出力双方のために使うことができます。フックによってアプリケーションの挙動を変えることができます
+- BPVariant is a uobject based blueprint friendly variant class to support easy data interchange through hook invokes
+- Hooks marked "Always Invoke" (like the "ModSkeletonInit" hook) will be called once for every loaded MOD_SKELETON init interface
+- Hooks NOT marked "Always Invoke" will only be called if they have been Connected, and will be called in priority order
+- Hooks will be passed a reference to an array of BPVariants. This "HookIO" will be used as both input and output, and allows hooks to modify core behavior:
 
-メインメニューの項目を要求するフックが登録されていると考えてください。元のゲームは"ニューゲーム", "ロードゲーム", "終了"というボタンを持つリストを返すとします。MOD作成者はこのリストを"ニューゲーム"ボタンを何か別のキャラクター作成画面へと続くテキストに置き換えることができます。仮想コードは以下のようなものになります。
+Imagine a registered hook that is requesting a list of main menu items. The base game could begin this list with buttons labeled "New Game", "Load Game", and "Exit". Someone could create a mod that adjusts this list, replacing the "New Game" button with one that leads to a different character creation screen. Psuedo Code:
 
 ```
 class CoreGame implements ModSkeletonPluginInterface
@@ -101,11 +100,11 @@ end class
 
 ## TODO
 
-- C++プラグインのサンプルを作成する
-- DebugあるいはDebugGameビルドをVisual Studioから起動し、Pakファイルを読み込んで使う方法を見つける
+- Example CPP plugin
+- Find a way to load Pak file from Debug or DebugGame build launched from Visual Studio
 
-## 疑問点
+## Questions
 
-- 何かもっとよい配布方法はないか？　コア実装をプラグイン化できるかもしれないが、そうなると他のプラグインがプラグイン内のヘッダファイルに依存してしまうことになる。
-- BPVariantブループリントコンストラクタヘルパーは若干できが悪い　(特に隠れたworld context -> outer pinsの部分) なにかもっといい形にする方法はないか？
-- HookIO TArray< BPVariant* > in-outピンは思っていたよりも多くのコピーを発生させてしまう... 何かうまく解決する方法はないか？　参照として入力された値を変更したいだけなのに、出力ノードにも表示されてしまう
+- Better way to distribute? Could make the core stuff a plugin... but then other plugins would have to depend on headers in it...
+- BPVariant blueprint constructor helpers seem a little kludgy (especially with the hidden world context -> outer pins) any way to make that better?
+- HookIO TArray< BPVariant* > in-out pins cause more copying than I was hoping for... better way to solve that? I'd like to just modify the passed in reference, but then it shows up as an output on the return node...

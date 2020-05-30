@@ -16,7 +16,7 @@
 	"Modules": [
 		{
 			"Name": "ModSkeletonExamplePluginA",
-			"Type": "Developer",
+			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}
 	]

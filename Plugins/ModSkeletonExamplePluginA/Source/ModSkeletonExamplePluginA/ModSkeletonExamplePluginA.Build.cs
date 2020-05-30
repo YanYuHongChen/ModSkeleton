@@ -12,36 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.IO;
 using UnrealBuildTool;
 
 public class ModSkeletonExamplePluginA : ModuleRules
 {
 	public ModSkeletonExamplePluginA(ReadOnlyTargetRules Target) : base(Target)
 	{
-		
-		PublicIncludePaths.AddRange(
-			new string[] {
-				"ModSkeletonExamplePluginA/Public"
-				// ... add public include paths required here ...
-			}
-			);
-				
-		
-		PrivateIncludePaths.AddRange(
-			new string[] {
-				"ModSkeletonExamplePluginA/Private",
-				// ... add other private include paths required here ...
-			}
-			);
-			
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+
+		PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Public"));
+		PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private"));
 		
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core",
-				// ... add other public dependencies that you statically link with here ...
+				"Core"
 			}
-			);
+		);
 			
 		
 		PrivateDependencyModuleNames.AddRange(
